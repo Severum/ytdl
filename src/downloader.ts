@@ -29,7 +29,7 @@ export function setupDownloader (){
       const video = ytdl(downloadItemParse.url)
       video.pipe(fs.createWriteStream(downloadItemParse.name+".mp4"))
       event.reply('dlUrl', true)
-      video.on('progress', function(chunkLength: int, totalReceive: int, total: int) {
+      video.on('progress', function(chunkLength, totalReceive, total) {
         event.reply('progressUrl'+downloadItemParse._id, Math.floor((totalReceive / total) * 100)) // percentage
 
         if (totalReceive == total) {

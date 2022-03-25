@@ -1,6 +1,5 @@
 <template>
   <h1 class="title">Ytdl</h1>
-  <!-- /home/severe/Téléchargements/ -->
   <div class="forminput forminputPath" :class="{ forminputfocus: focusDownloadPath }">
     <input v-model="item.downloadPath" type="text" name="downloadPath" class="input" @mouseup.right="rightClickMenu" @contextmenu.prevent v-on:focus="focusDownloadPath = true" v-on:focusout="focusDownloadPath = false"> <!-- v-on:keyup.enter="startDl()" -->
     <label for="downloadPath" class="label" :class="{ labelfocus: focusDownloadPath || item.downloadPath != '' }">chemin</label>
@@ -13,7 +12,7 @@
       <input v-model="item.name" type="text" name="name" class="input" @mouseup.right="rightClickMenu" @contextmenu.prevent v-on:focus="focusName = true" v-on:focusout="focusName = false">
       <label for="name" class="label" :class="{ labelfocus: focusName || item.name != '' }">nom</label>
     </div>
-    <!-- https://www.youtube.com/watch?v=Cv8EsAajC70 -->
+    <!-- exemple url https://www.youtube.com/watch?v=Cv8EsAajC70 -->
     <div class="forminput" :class="{ forminputfocus: focusUrl }">
       <input v-model="item.url" type="text" name="url" class="input" @mouseup.right="rightClickMenu" @contextmenu.prevent v-on:focus="focusUrl = true" v-on:focusout="focusUrl = false">
       <label for="url" class="label" :class="{ labelfocus: focusUrl || item.url != '' }">url</label>
@@ -86,7 +85,7 @@ export default defineComponent({
         this.item.thumbnail = ytInfo.thumbnail
         this.founded = true
       } else {
-        // handle error
+        // TODO handle error
         this.founded = false
       }
     })

@@ -6,7 +6,7 @@ import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-import {setupDownloader} from './downloader.ts'
+import {setupDownloader} from './downloader'
 setupDownloader()
 
 // Scheme must be registered before the app is ready
@@ -22,9 +22,8 @@ async function createWindow() {
     width: maxiSize.width,
     height: maxiSize.height,
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: true,
+      contextIsolation: false,
     }
   })
 
@@ -62,7 +61,7 @@ app.on('ready', async () => {
     // Install Vue Devtools
     try {
       await installExtension(VUEJS_DEVTOOLS)
-    } catch (e) {
+    } catch (e: any) {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }

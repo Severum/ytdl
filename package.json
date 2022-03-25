@@ -14,22 +14,24 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "ts-loader": "~8.2.0",
     "vue": "^3.0.0",
     "vuex": "^4.0.0-0",
-    "ytdl-core": "^4.10.0"
+    "ytdl-core": "^4.11.0"
   },
   "devDependencies": {
     "@types/electron-devtools-installer": "^2.2.0",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-plugin-babel": "^5.0.4",
+    "@vue/cli-plugin-typescript": "^5.0.4",
     "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-service": "^5.0.4",
     "@vue/compiler-sfc": "^3.0.0",
-    "electron": "^11.0.0",
+    "electron": "^17.2.0",
+    "electron-builder": "^22.14.13",
     "electron-devtools-installer": "^3.1.0",
-    "node-sass": "^4.12.0",
-    "sass-loader": "^8.0.2",
+    "node-sass": "^7.0.1",
+    "sass-loader": "^12.6.0",
     "typescript": "~4.1.5",
-    "vue-cli-plugin-electron-builder": "*"
+    "vue-cli-plugin-electron-builder": "^1.4.6"
   }
 }
