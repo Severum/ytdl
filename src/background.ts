@@ -3,11 +3,11 @@
 import { app, protocol, BrowserWindow, screen } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-import path from 'path'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-import {setupDownloader} from './downloader'
-setupDownloader()
+import {initDownloader} from './services/downloader'
+initDownloader()
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([

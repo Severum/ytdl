@@ -122,11 +122,6 @@ export default defineComponent({
     },
     openMenu: function(e: Event) {
       this.viewRightClickMenu = true
-      let test = this
-      nextTick(function() {
-        // this.right.focus()
-        // test.setMenu(e.y, e.x)
-      }.bind(this))
       e.preventDefault()
     },
     hideErrorsMessage: function() {
