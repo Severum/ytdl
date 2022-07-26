@@ -19,6 +19,7 @@ export function initDownloader() {
       }
       return
     } catch (err) {
+      event.reply('infoUrl', false)
       throw err
     }
   })

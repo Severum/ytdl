@@ -47,10 +47,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick } from 'vue'
-import { ipcRenderer, Menu, MenuItem } from 'electron'
+import { defineComponent } from 'vue'
+import { ipcRenderer } from 'electron'
 import fs from 'fs'
-// import remote from 'remote'
 
 export default defineComponent({
   name: 'YtForm',
@@ -58,14 +57,14 @@ export default defineComponent({
     return {
       item: {
         _id: 0,
-        name: "",
-        downloadPath: "",
-        url: "",
+        name: "Anita no !",
+        downloadPath: "C:\\Users\\maels\\Music",
+        url: "https://www.youtube.com/watch?v=Cv8EsAajC70",
         thumbnail: "",
         percentage: 0,
       },
       founded: false,
-      // input
+      // input tag decorator
       focusDownloadPath: false,
       focusName: false,
       focusUrl: false,
@@ -85,7 +84,7 @@ export default defineComponent({
         this.item.thumbnail = ytInfo.thumbnail
         this.founded = true
       } else {
-        // TODO handle error
+        this.showErrorMessage("noYtUrl")
         this.founded = false
       }
     })
@@ -151,12 +150,6 @@ export default defineComponent({
         this.showErrorMessage("noUrl")
         isOk = false
       }
-      //  else {
-      //   if () {
-      //     this.showErrorMessage("noYtUrl")
-      //     isOk = false
-      //   }
-      // }
 
       if (isOk) {
         try {
@@ -172,6 +165,9 @@ export default defineComponent({
       } catch (err) {
         throw err
       }
+    },
+    parseYtUrl: function(url: string) {
+
     }
   }
 });
@@ -188,8 +184,9 @@ export default defineComponent({
   border-top: 2px solid transparent;
   border-left: 2px solid transparent;
   border-right: 2px solid transparent;
-  border-bottom: 2px solid #e5e5e5;
+  border-bottom: 2px solid #757575;
   border-radius: 4px;
+  margin-top: 0.5rem;
   margin-right: 1rem;
   margin-left: 1rem;
   transition: all 0.2s ease;
@@ -200,12 +197,12 @@ export default defineComponent({
   width: 70vw;
 }
 .forminputfocus {
-  border: 2px solid #e5e5e5;
+  border: 2px solid #757575;
 }
 .input {
   background-color: transparent;
   width: 100%;
-  color: #e5e5e5;
+  color: #757575;
   font-family: inherit;
   border: none;
   outline: 0;
@@ -216,14 +213,14 @@ export default defineComponent({
   top: 5px;
   left: 10px;
   transition: all 0.2s ease;
-  color: #e5e5e5;
+  color: #757575;
   background-color: transparent;
 }
 .labelfocus {
   top: -10px;
   cursor: default;
   left: 0;
-  background-color: #757575;
+  background-color: #f0f2f5;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   font-size: 0.8rem;
@@ -233,7 +230,7 @@ export default defineComponent({
   margin-top:2rem;
   margin-right: 15vw;
   margin-left: 15vw;
-  border: solid 1px #ffffff;
+  border: solid 1px #757575;
   border-radius: 5px;
 }
 .thumbnail {
@@ -257,7 +254,7 @@ export default defineComponent({
 .errorMessage {
   display: none;
   // display: block;
-  color: rgb(207, 1, 1);
+  color: #f02849;
 }
 .buttonsGroup {
   display: flex;
@@ -270,9 +267,9 @@ export default defineComponent({
   height: 3rem;
   width: 6rem;
   font-family: inherit;
-  background-color: #1f456b;
+  background-color: #166fe5;
   border-radius: 5px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #757575;
   color: #e5e5e5;
   cursor: pointer;
 }

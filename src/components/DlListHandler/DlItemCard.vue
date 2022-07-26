@@ -60,7 +60,7 @@ export default defineComponent({
 .itemCard {
   display: flex;
   flex-direction: column;
-  border: solid 1px #ffffff;
+  border: solid 1px #757575;
   border-radius: 5px;
 }
 .thumbnail {
@@ -88,7 +88,7 @@ export default defineComponent({
 
   .progressBar{
     height:100%;
-    background:#1f456b;
+    background:#166fe5;
     border-radius:5px;
   }
   .percentage{
@@ -105,10 +105,10 @@ export default defineComponent({
   height: 1.7rem;
   width: 6rem;
   font-family: inherit;
-  background-color: #1f456b;
+  background-color: #36a420;
   border-radius: 5px;
-  border: 1px solid #e5e5e5;
-  color: #e5e5e5;
+  border: 1px solid #757575;
+  color: #f0f2f5;
   cursor: pointer;
 }
 </style>

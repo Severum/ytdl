@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import DlItemCard from './DlItemCard.vue';
+import DlItemCard from './DlListHandler/DlItemCard.vue';
 
 export default defineComponent({
   name: 'dlListhandler',
@@ -21,6 +21,7 @@ export default defineComponent({
     }
   },
   created: function() {
+    // DEBUG: 
     // this.$store.commit('addDlList', {
     //   _id: 0,
     //   name: "test1",

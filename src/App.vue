@@ -19,15 +19,15 @@ export default defineComponent({
 
 <style lang="scss">
 body {
-  background-color:#757575;
+  background-color:#f0f2f5;
   margin: 0;
   padding: 0;
 }
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Georgia, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #ffffff;
+  color: #757575;
 }
 </style>
