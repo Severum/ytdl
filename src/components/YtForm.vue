@@ -5,6 +5,9 @@
     <label for="downloadPath" class="label" :class="{ labelfocus: focusDownloadPath || item.downloadPath != '' }">chemin</label>
   </div>
   <div class="formcard">
+    <div id="loader" class="loader">
+      <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+    </div>
     <div class="thumbnail">
       <img v-if="item.thumbnail != ''" :src="item.thumbnail" class="thumbnailTag">
     </div>
@@ -39,6 +42,7 @@
       </div>
     </div>
   </div>
+  <!-- TODO : right click copy/paste  -->
   <!-- :click="closeMenu"   :style="{'top:'+this.top+'px', 'left:'+this.left+'px'}"  -->
   <ul id="rightClickMenu" tabindex="-1" v-if="viewRightClickMenu">
     <li>copier</li>
@@ -57,9 +61,9 @@ export default defineComponent({
     return {
       item: {
         _id: 0,
-        name: "Anita no !",
-        downloadPath: "C:\\Users\\maels\\Music",
-        url: "https://www.youtube.com/watch?v=Cv8EsAajC70",
+        name: "",
+        downloadPath: "",
+        url: "",
         thumbnail: "",
         percentage: 0,
       },
@@ -83,6 +87,7 @@ export default defineComponent({
         }
         this.item.thumbnail = ytInfo.thumbnail
         this.founded = true
+        document.getElementById("loader")!.style.display = "none";
       } else {
         this.showErrorMessage("noYtUrl")
         this.founded = false
@@ -154,6 +159,7 @@ export default defineComponent({
       if (isOk) {
         try {
           ipcRenderer.send('infoUrl', JSON.stringify(this.item))
+          document.getElementById("loader")!.style.display = "block";
         } catch (err){
           throw err
         }
@@ -165,9 +171,6 @@ export default defineComponent({
       } catch (err) {
         throw err
       }
-    },
-    parseYtUrl: function(url: string) {
-
     }
   }
 });
@@ -233,6 +236,76 @@ export default defineComponent({
   border: solid 1px #757575;
   border-radius: 5px;
 }
+.loader {
+  top: 9rem;
+  left: 15%;
+  height: 49%;
+  width: 70%;
+  border: solid 1px #757575;
+  border-radius: 5px;
+  background-color: #000000;
+  opacity: 50%;
+  display: none;
+  z-index: 100;
+  position: absolute;
+}
+.lds-ellipsis {
+  opacity: 100%;
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
 .thumbnail {
   margin: 1rem;
   height: 15vh;
@@ -277,6 +350,7 @@ export default defineComponent({
   opacity: 0.6;
   cursor: not-allowed;
 }
+
 #rightClickMenu{
   background: #FAFAFA;
   border: 1px solid #BDBDBD;
