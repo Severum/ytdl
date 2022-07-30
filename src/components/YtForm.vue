@@ -1,7 +1,7 @@
 <template>
   <h1 class="title">Ytdl</h1>
   <div class="forminput forminputPath" :class="{ forminputfocus: focusDownloadPath }">
-    <input v-model="item.downloadPath" type="text" name="downloadPath" class="input" @mouseup.right="rightClickMenu" @contextmenu.prevent v-on:focus="focusDownloadPath = true" v-on:focusout="focusDownloadPath = false"> <!-- v-on:keyup.enter="startDl()" -->
+    <input v-model="item.downloadPath" type="text" name="downloadPath" class="input" @mouseup.right="openRightClickMenu" @contextmenu.prevent v-on:focus="focusDownloadPath = true" v-on:focusout="focusDownloadPath = false"> <!-- v-on:keyup.enter="startDl()" -->
     <label for="downloadPath" class="label" :class="{ labelfocus: focusDownloadPath || item.downloadPath != '' }">chemin</label>
   </div>
   <div class="formcard">
@@ -12,12 +12,12 @@
       <img v-if="item.thumbnail != ''" :src="item.thumbnail" class="thumbnailTag">
     </div>
     <div class="forminput" :class="{ forminputfocus: focusName }">
-      <input v-model="item.name" type="text" name="name" class="input" @mouseup.right="rightClickMenu" @contextmenu.prevent v-on:focus="focusName = true" v-on:focusout="focusName = false">
+      <input v-model="item.name" type="text" name="name" class="input" @mouseup.right="openRightClickMenu" @contextmenu.prevent v-on:focus="focusName = true" v-on:focusout="focusName = false">
       <label for="name" class="label" :class="{ labelfocus: focusName || item.name != '' }">nom</label>
     </div>
     <!-- exemple url https://www.youtube.com/watch?v=Cv8EsAajC70 -->
     <div class="forminput" :class="{ forminputfocus: focusUrl }">
-      <input v-model="item.url" type="text" name="url" class="input" @mouseup.right="rightClickMenu" @contextmenu.prevent v-on:focus="focusUrl = true" v-on:focusout="focusUrl = false">
+      <input v-model="item.url" type="text" name="url" class="input" @mouseup.right="openRightClickMenu" @contextmenu.prevent v-on:focus="focusUrl = true" v-on:focusout="focusUrl = false">
       <label for="url" class="label" :class="{ labelfocus: focusUrl || item.url != '' }">url</label>
     </div>
     <div class="footer">
@@ -42,18 +42,17 @@
       </div>
     </div>
   </div>
-  <!-- TODO : right click copy/paste  -->
-  <!-- :click="closeMenu"   :style="{'top:'+this.top+'px', 'left:'+this.left+'px'}"  -->
-  <ul id="rightClickMenu" tabindex="-1" v-if="viewRightClickMenu">
-    <li>copier</li>
-    <li>coller</li>
+  <!-- right click copy/paste  -->
+  <ul id="rightClickMenu" tabindex="-1" v-show="rightClickMenu">
+    <li id="copy" v-on:click="copyToClipboard" >copier</li>
+    <li id="paste" v-on:click="pasteFromClipboard">coller</li>
   </ul>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { ipcRenderer } from 'electron'
-import fs from 'fs'
+import { defineComponent } from 'vue';
+import { ipcRenderer, clipboard } from 'electron';
+import fs from 'fs';
 
 export default defineComponent({
   name: 'YtForm',
@@ -67,35 +66,42 @@ export default defineComponent({
         thumbnail: "",
         percentage: 0,
       },
+      // is item data fill
       founded: false,
       // input tag decorator
       focusDownloadPath: false,
       focusName: false,
       focusUrl: false,
-      // rightClickMenu
-      viewRightClickMenu: false,
-      top: 0,
-      left: 0,
+      // display rightClickMenu
+      rightClickMenu: false,
+      selectedInput: "",
+      selectionToCopy: "",
     }
   },
   created: function() {
-    // dl message
-    ipcRenderer.on('infoUrl', (event: Electron.IpcRendererEvent, ytInfo: any) => {
-      if (ytInfo) {
-        if (this.item.name == "") {
-          this.item.name = ytInfo.name
-        }
-        this.item.thumbnail = ytInfo.thumbnail
-        this.founded = true
-        document.getElementById("loader")!.style.display = "none";
-      } else {
-        this.showErrorMessage("noYtUrl")
-        this.founded = false
+    // close right click menu
+    window.addEventListener('click', (e: MouseEvent) => {
+      if (this.rightClickMenu) {
+        this.rightClickMenu = false;
       }
     })
+    // get video data from yt
+    ipcRenderer.on('infoUrl', (event: Electron.IpcRendererEvent, ytInfo: any) => {
+      if (ytInfo) {
+        this.item.name = ytInfo.name;
+        this.item.thumbnail = ytInfo.thumbnail;
+        this.founded = true;
+        document.getElementById("loader")!.style.display = "none";
+      } else {
+        this.showErrorMessage("noYtUrl");
+        this.founded = false;
+        document.getElementById("loader")!.style.display = "none";
+      }
+    })
+    // run download and reset form
     ipcRenderer.on('dlUrl', (event: Electron.IpcRendererEvent, isStarted: boolean) => {
       if (isStarted) {
-        this.$store.commit('addDlList', this.item)
+        this.$store.commit('addDlList', this.item);
         this.item = {
           _id: this.item._id + 1,
           name: "",
@@ -103,75 +109,96 @@ export default defineComponent({
           url: "",
           thumbnail: "",
           percentage: 0,
-        }
-        this.founded = false
+        };
+        this.founded = false;
       } else {
-        this.showErrorMessage("dlIssue")
+        this.showErrorMessage("dlIssue");
       }
     })
   },
   methods: {
-    setMenu: function(top: number, left: number) {
-      let largestHeight = window.innerHeight - this.top - 25
-      let largestWidth = window.innerWidth - this.left - 25
-      if (top > largestHeight)
-        top = largestHeight
-      if (left > largestWidth)
-        left = largestWidth
-      this.top = top
-      this.left = left
-    },
-    closeMenu: function() {
-      this.viewRightClickMenu = false;
-    },
-    openMenu: function(e: Event) {
-      this.viewRightClickMenu = true
-      e.preventDefault()
+    openRightClickMenu: function(e: MouseEvent) {
+      this.rightClickMenu = true;
+      document.getElementById("rightClickMenu")!.style.left = e.clientX + "px";
+      document.getElementById("rightClickMenu")!.style.top = e.clientY + "px";
+      this.selectedInput = this.focusDownloadPath ? 'dlPath' : this.focusName ? 'name' : 'url';
+      if (window.getSelection()) {
+        this.selectionToCopy = window.getSelection() ? window.getSelection()!.toString() : "";
+      }
+      e.preventDefault();
     },
     hideErrorsMessage: function() {
       if (document.getElementById("wrongPath")) {
-        document.getElementById("wrongPath")!.style.display = "none"
+        document.getElementById("wrongPath")!.style.display = "none";
       }
       if (document.getElementById("noUrl")) {
-        document.getElementById("noUrl")!.style.display = "none"
+        document.getElementById("noUrl")!.style.display = "none";
       }
+      if (document.getElementById("noYtUrl")) {
+        document.getElementById("noYtUrl")!.style.display = "none";
+      }
+      
       if (document.getElementById("dlIssue")) {
-        document.getElementById("dlIssue")!.style.display = "none"
+        document.getElementById("dlIssue")!.style.display = "none";
       }
     },
     showErrorMessage: function(id: string) {
       if (document.getElementById(id)) {
-        document.getElementById(id)!.style.display = "block"
+        document.getElementById(id)!.style.display = "block";
       }
     },
     checkUrl: async function() {
-      this.hideErrorsMessage()
-      let isOk = true
+      this.hideErrorsMessage();
+      let isOk = true;
       if (!fs.existsSync(this.item.downloadPath)){
-        this.showErrorMessage("wrongPath")
-        isOk = false
+        this.showErrorMessage("wrongPath");
+        isOk = false;
       }
       if (this.item.url == "") {
-        this.showErrorMessage("noUrl")
-        isOk = false
+        this.showErrorMessage("noUrl");
+        isOk = false;
       }
 
       if (isOk) {
         try {
-          ipcRenderer.send('infoUrl', JSON.stringify(this.item))
+          ipcRenderer.send('infoUrl', JSON.stringify(this.item));
           document.getElementById("loader")!.style.display = "block";
-        } catch (err){
-          throw err
+        } catch(err) {
+          throw err;
         }
       }
     },
     startDl: async function() {
       try {
-        ipcRenderer.send('dlUrl', JSON.stringify(this.item))
+        ipcRenderer.send('dlUrl', JSON.stringify(this.item));
       } catch (err) {
-        throw err
+        throw err;
+      }
+    },  
+    copyToClipboard: function() {
+      clipboard.writeText(this.selectionToCopy);
+    },
+    pasteFromClipboard: function() {
+      try {
+        switch (this.selectedInput) {
+          case "dlPath":
+            this.item.downloadPath = clipboard.readText();
+            return;
+          case 'name': 
+            this.item.name = clipboard.readText();
+            return;
+          case 'url':
+            this.item.url = clipboard.readText();
+            return;
+          default:
+            console.log("j'ai pas collé !!!" + clipboard.readBookmark());
+        }
+      } catch (e) {
+        console.log(e);
+        throw e;
       }
     }
+    
   }
 });
 </script>
@@ -326,7 +353,6 @@ export default defineComponent({
 }
 .errorMessage {
   display: none;
-  // display: block;
   color: #f02849;
 }
 .buttonsGroup {

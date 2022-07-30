@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { ipcRenderer } from 'electron'
+import { defineComponent } from 'vue';
+import { ipcRenderer } from 'electron';
 
 export default defineComponent({
   name: 'DlItemCard',
@@ -42,15 +42,15 @@ export default defineComponent({
   },
   created: function() {
     ipcRenderer.on('progressUrl'+this.item._id, (event: Electron.IpcRendererEvent, percent: number) => {
-      this.item.percentage = percent
+      this.item.percentage = percent;
     })
     ipcRenderer.on('endDl'+this.item._id, (event: Electron.IpcRendererEvent, success: boolean) => {
-      this.ended = true
+      this.ended = true;
     })
   },
   methods: {
     removeCard: function() {
-      this.$store.commit('removeDlList', this.item)
+      this.$store.commit('removeDlList', this.item);
     }
   }
 });
