@@ -7,11 +7,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import DlItemCard from './DlListHandler/DlItemCard.vue';
+import { defineComponent } from "vue";
+import DlItemCard from "./DlListHandler/DlItemCard.vue";
 
 export default defineComponent({
-  name: 'dlListhandler',
+  name: "dlListhandler",
   components: {
     DlItemCard,
   },
@@ -20,57 +20,57 @@ export default defineComponent({
       return this.$store.state.dlList
     }
   },
-  created: function() {
+  /* created: function() {
     // DEBUG: 
-    // this.$store.commit('addDlList', {
-    //   _id: 0,
-    //   name: "test1",
-    //   downloadPath: "nop",
-    //   url: "nop",
-    //   thumbnail: "nop",
-    //   percentage: 0,
-    // })
-    // this.$store.commit('addDlList', {
-    //   _id: 2,
-    //   name: "test2",
-    //   downloadPath: "nop",
-    //   url: "nop",
-    //   thumbnail: "nop",
-    //   percentage: 50,
-    // })
-    // this.$store.commit('addDlList', {
-    //   _id: 3,
-    //   name: "test3",
-    //   downloadPath: "nop",
-    //   url: "nop",
-    //   thumbnail: "nop",
-    //   percentage: 100,
-    // })
-    // this.$store.commit('addDlList', {
-    //   _id: 4,
-    //   name: "test4",
-    //   downloadPath: "nop",
-    //   url: "nop",
-    //   thumbnail: "nop",
-    //   percentage: 0,
-    // })
-    // this.$store.commit('addDlList', {
-    //   _id: 5,
-    //   name: "test5",
-    //   downloadPath: "nop",
-    //   url: "nop",
-    //   thumbnail: "nop",
-    //   percentage: 50,
-    // })
-    // this.$store.commit('addDlList', {
-    //   _id: 6,
-    //   name: "test6",
-    //   downloadPath: "nop",
-    //   url: "nop",
-    //   thumbnail: "nop",
-    //   percentage: 100,
-    // })
-  }
+    this.$store.commit('addDlList', {
+      _id: 0,
+      name: "test1",
+      downloadPath: "nop",
+      url: "nop",
+      thumbnail: "nop",
+      percentage: 0,
+    })
+    this.$store.commit('addDlList', {
+      _id: 2,
+      name: "test2",
+      downloadPath: "nop",
+      url: "nop",
+      thumbnail: "nop",
+      percentage: 50,
+    })
+    this.$store.commit('addDlList', {
+      _id: 3,
+      name: "test3",
+      downloadPath: "nop",
+      url: "nop",
+      thumbnail: "nop",
+      percentage: 100,
+    })
+    this.$store.commit('addDlList', {
+      _id: 4,
+      name: "test4",
+      downloadPath: "nop",
+      url: "nop",
+      thumbnail: "nop",
+      percentage: 0,
+    })
+    this.$store.commit('addDlList', {
+      _id: 5,
+      name: "test5",
+      downloadPath: "nop",
+      url: "nop",
+      thumbnail: "nop",
+      percentage: 50,
+    })
+    this.$store.commit('addDlList', {
+      _id: 6,
+      name: "test6",
+      downloadPath: "nop",
+      url: "nop",
+      thumbnail: "nop",
+      percentage: 100,
+    })
+  } */
 });
 </script>
 

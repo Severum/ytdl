@@ -50,12 +50,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { ipcRenderer, clipboard } from 'electron';
-import fs from 'fs';
+import { defineComponent } from "vue";
+import { ipcRenderer, clipboard } from "electron";
+import fs from "fs";
 
 export default defineComponent({
-  name: 'YtForm',
+  name: "YtForm",
   data() {
     return {
       item: {
@@ -74,21 +74,24 @@ export default defineComponent({
       focusUrl: false,
       // display rightClickMenu
       rightClickMenu: false,
+      // which input tag trigger this function
       selectedInput: "",
       selectionToCopy: "",
     }
   },
   created: function() {
     // close right click menu
-    window.addEventListener('click', (e: MouseEvent) => {
+    window.addEventListener("click", (e: MouseEvent) => {
       if (this.rightClickMenu) {
         this.rightClickMenu = false;
       }
     })
     // get video data from yt
-    ipcRenderer.on('infoUrl', (event: Electron.IpcRendererEvent, ytInfo: any) => {
+    ipcRenderer.on("infoUrl", (event: Electron.IpcRendererEvent, ytInfo: any) => {
       if (ytInfo) {
-        this.item.name = ytInfo.name;
+        if (this.item.name == "") {
+          this.item.name = ytInfo.name;
+        }
         this.item.thumbnail = ytInfo.thumbnail;
         this.founded = true;
         document.getElementById("loader")!.style.display = "none";
@@ -99,9 +102,9 @@ export default defineComponent({
       }
     })
     // run download and reset form
-    ipcRenderer.on('dlUrl', (event: Electron.IpcRendererEvent, isStarted: boolean) => {
+    ipcRenderer.on("dlUrl", (event: Electron.IpcRendererEvent, isStarted: boolean) => {
       if (isStarted) {
-        this.$store.commit('addDlList', this.item);
+        this.$store.commit("addDlList", this.item);
         this.item = {
           _id: this.item._id + 1,
           name: "",
@@ -121,7 +124,7 @@ export default defineComponent({
       this.rightClickMenu = true;
       document.getElementById("rightClickMenu")!.style.left = e.clientX + "px";
       document.getElementById("rightClickMenu")!.style.top = e.clientY + "px";
-      this.selectedInput = this.focusDownloadPath ? 'dlPath' : this.focusName ? 'name' : 'url';
+      this.selectedInput = this.focusDownloadPath ? "dlPath" : this.focusName ? "name" : "url";
       if (window.getSelection()) {
         this.selectionToCopy = window.getSelection() ? window.getSelection()!.toString() : "";
       }
@@ -161,7 +164,7 @@ export default defineComponent({
 
       if (isOk) {
         try {
-          ipcRenderer.send('infoUrl', JSON.stringify(this.item));
+          ipcRenderer.send("infoUrl", JSON.stringify(this.item));
           document.getElementById("loader")!.style.display = "block";
         } catch(err) {
           throw err;
@@ -170,7 +173,7 @@ export default defineComponent({
     },
     startDl: async function() {
       try {
-        ipcRenderer.send('dlUrl', JSON.stringify(this.item));
+        ipcRenderer.send("dlUrl", JSON.stringify(this.item));
       } catch (err) {
         throw err;
       }
@@ -184,10 +187,10 @@ export default defineComponent({
           case "dlPath":
             this.item.downloadPath = clipboard.readText();
             return;
-          case 'name': 
+          case "name": 
             this.item.name = clipboard.readText();
             return;
-          case 'url':
+          case "url":
             this.item.url = clipboard.readText();
             return;
           default:
@@ -216,7 +219,7 @@ export default defineComponent({
   border-right: 2px solid transparent;
   border-bottom: 2px solid #757575;
   border-radius: 4px;
-  margin-top: 0.5rem;
+  margin-top: 0.7rem;
   margin-right: 1rem;
   margin-left: 1rem;
   transition: all 0.2s ease;
@@ -262,19 +265,20 @@ export default defineComponent({
   margin-left: 15vw;
   border: solid 1px #757575;
   border-radius: 5px;
+  position: relative;
 }
 .loader {
-  top: 9rem;
-  left: 15%;
-  height: 49%;
-  width: 70%;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
   border: solid 1px #757575;
   border-radius: 5px;
   background-color: #000000;
   opacity: 50%;
   display: none;
   z-index: 100;
-  position: absolute;
 }
 .lds-ellipsis {
   opacity: 100%;
@@ -386,7 +390,7 @@ export default defineComponent({
   margin: 0;
   padding: 0;
   position: absolute;
-  width: 250px;
+  width: 150px;
   z-index: 999999;
 }
 #rightClickMenu li {

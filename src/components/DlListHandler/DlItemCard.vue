@@ -23,11 +23,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { ipcRenderer } from 'electron';
+import { defineComponent } from "vue";
+import { ipcRenderer } from "electron";
 
 export default defineComponent({
-  name: 'DlItemCard',
+  name: "DlItemCard",
   data() {
     return {
       registerPath: "",
@@ -41,16 +41,16 @@ export default defineComponent({
     }
   },
   created: function() {
-    ipcRenderer.on('progressUrl'+this.item._id, (event: Electron.IpcRendererEvent, percent: number) => {
+    ipcRenderer.on("progressUrl" + this.item._id, (event: Electron.IpcRendererEvent, percent: number) => {
       this.item.percentage = percent;
     })
-    ipcRenderer.on('endDl'+this.item._id, (event: Electron.IpcRendererEvent, success: boolean) => {
+    ipcRenderer.on("endDl" + this.item._id, (event: Electron.IpcRendererEvent, success: boolean) => {
       this.ended = true;
     })
   },
   methods: {
     removeCard: function() {
-      this.$store.commit('removeDlList', this.item);
+      this.$store.commit("removeDlList", this.item);
     }
   }
 });
@@ -58,6 +58,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .itemCard {
+  position: relative;
   display: flex;
   flex-direction: column;
   border: solid 1px #757575;
@@ -65,15 +66,15 @@ export default defineComponent({
 }
 .thumbnail {
   margin-top: 1vh;
-  height: 10vh;
-  width: 18vw;
+  height: 100%;
+  width: 100%;
 }
 .thumbnailTag {
-  height: auto;
-  width: auto;
+  height: 100%;
+  width: 95%;
 }
 .name {
-  color: #ffffff;
+  color: #757575;
 }
 .downloading {
   margin:0.5vh;
@@ -81,7 +82,7 @@ export default defineComponent({
 
 .loadingBar{
   width:100%;
-  height:1.7vh;
+  height:auto;
   background:#dfe6e9;
   border-radius:5px;
   border: 1px solid #ffffff;

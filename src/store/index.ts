@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import { createStore } from "vuex";
 
 export default createStore({
   state: {
@@ -6,7 +6,7 @@ export default createStore({
   },
   mutations: {
     addDlList (state, item) {
-      state.dlList.push(item)
+      state.dlList.push(item);
     },
     removeDlList (state, item) {
       const index = state.dlList.indexOf(item, 0);

@@ -11,9 +11,9 @@ export async function convert (mp4Name: string, mp3Name: string){
         
         console.log("Convert success !");
         fs.unlink(mp4Name, (err: Error) => {
-            if (err) {
+            if (err)
                 throw err;
-            }
+            
         
             console.log(mp4Name + " is deleted.");
         });
